@@ -77,7 +77,13 @@ public class ClinicServiceImpl implements ClinicService {
 		return petRepository.findAll();
 	}
 
-	@Override
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<Pet> findPetsByOwnerId(int ownerId) throws DataAccessException {
+        return petRepository.findByOwnerId( ownerId );
+    }
+
+    @Override
 	@Transactional
 	public void deletePet(Pet pet) throws DataAccessException {
 		petRepository.delete(pet);

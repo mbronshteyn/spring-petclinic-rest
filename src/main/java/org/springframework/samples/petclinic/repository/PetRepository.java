@@ -52,6 +52,15 @@ public interface PetRepository {
     Pet findById(int id) throws DataAccessException;
 
     /**
+     * Retrieve all <code>Pet</code> from the data store by owner id.
+     *
+     * @param ownerId the id to search for
+     * @return the <code>Collection</code> if found
+     * @throws org.springframework.dao.DataRetrievalFailureException if not found
+     */
+    Collection<Pet> findByOwnerId( int ownerId ) throws DataAccessException;
+
+    /**
      * Save a <code>Pet</code> to the data store, either inserting or updating it.
      *
      * @param pet the <code>Pet</code> to save
