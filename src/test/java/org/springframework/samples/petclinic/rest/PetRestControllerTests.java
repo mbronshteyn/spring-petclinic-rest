@@ -150,6 +150,31 @@ public class PetRestControllerTests {
     }
 
     @Test
+    public void testGetPetsByOwnerIdSuccess() throws Exception {
+        // we just need to verify the service and that it returns a set of pets
+        given(this.clinicService.findPetsByOwnerId( 1 )).willReturn(pets);
+        this.mockMvc.perform(get("/api/pets/ownerid/1")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.[0].id").value(3))
+            .andExpect(jsonPath("$.[0].name").value("Rosy"))
+            .andExpect(jsonPath("$.[0].owner.id").value( 1 ))
+            .andExpect(jsonPath("$.[1].id").value(4))
+            .andExpect(jsonPath("$.[1].name").value("Jewel"))
+            .andExpect(jsonPath("$.[1].owner.id").value( 1 ));
+    }
+
+    @Test
+    public void testGetPetsByOwnerIdNotFound() throws Exception {
+        pets.clear();
+        given(this.clinicService.findPetsByOwnerId(1)).willReturn(pets);
+        this.mockMvc.perform(get("/api/pets/ownerid/1")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void testCreatePetSuccess() throws Exception {
     	Pet newPet = pets.get(0);
     	newPet.setId(999);
