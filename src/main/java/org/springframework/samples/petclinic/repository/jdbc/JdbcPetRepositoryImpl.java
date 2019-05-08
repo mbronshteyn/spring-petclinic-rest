@@ -136,11 +136,11 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
                 params,
                 new JdbcPetRowMapper());
-        findPetsWithQuery(pets, jdbcPets);
+        populatePets(pets, jdbcPets);
         return pets;
     }
 
-    private void findPetsWithQuery(Collection<Pet> pets, Collection<JdbcPet> jdbcPets) {
+    private void populatePets(Collection<Pet> pets, Collection<JdbcPet> jdbcPets) {
         Collection<PetType> petTypes = this.namedParameterJdbcTemplate.query("SELECT id, name FROM types ORDER BY name",
             new HashMap<String,
                 Object>(), BeanPropertyRowMapper.newInstance(PetType.class));
@@ -166,7 +166,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             .query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE owner_id=:owner_id",
                 params,
                 new JdbcPetRowMapper());
-        findPetsWithQuery(pets, jdbcPets);
+        populatePets(pets, jdbcPets);
         return pets;
     }
 
