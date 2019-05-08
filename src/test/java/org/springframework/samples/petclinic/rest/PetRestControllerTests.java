@@ -39,6 +39,7 @@ import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.model.Owner;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.service.ApplicationTestConfig;
 import org.springframework.samples.petclinic.service.ClinicService;
 import org.springframework.test.context.ContextConfiguration;
@@ -72,6 +73,8 @@ public class PetRestControllerTests {
 
     private List<Pet> pets;
 
+    List<Visit> visits = new ArrayList<>();
+
     @Before
     public void initPets(){
     	this.mockMvc = MockMvcBuilders.standaloneSetup(petRestController)
@@ -98,6 +101,11 @@ public class PetRestControllerTests {
     	pet.setOwner(owner);
     	pet.setType(petType);
     	pets.add(pet);
+
+    	// create visits to test get pets with visits
+        Visit visit = new Visit();
+        visit.setId( 1 );
+        visits.add( visit );
 
     	pet = new Pet();
     	pet.setId(4);
@@ -146,6 +154,30 @@ public class PetRestControllerTests {
     	given(this.clinicService.findAllPets()).willReturn(pets);
         this.mockMvc.perform(get("/api/pets/")
         	.accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+
+    @Test
+    public void testGetPetsWithVisitsSuccess() throws Exception {
+        // we just need to verify the service and that it returns a set of pets
+        given(this.clinicService.findAllPets()).willReturn(pets);
+        given( this.clinicService.findVisitsByPetId( 3 )).willReturn( visits );
+        this.mockMvc.perform(get("/api/pets/petswithvisits")
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=UTF-8"))
+            .andExpect(jsonPath("$.[0].id").value(3))
+            .andExpect(jsonPath("$.[0].name").value("Rosy"));
+    }
+
+    @Test
+    public void testGetPetsWithVisitsNotFound() throws Exception {
+        // we just need to verify the service and that it returns a set of pets
+        given(this.clinicService.findAllPets()).willReturn(pets);
+        given( this.clinicService.findVisitsByPetId( 3 )).willReturn( new ArrayList<Visit>() );
+        this.mockMvc.perform(get("/api/pets/petswithvisits")
+            .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
 
