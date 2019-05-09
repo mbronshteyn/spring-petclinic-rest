@@ -102,14 +102,9 @@ public class PetRestControllerTests {
     	pet.setBirthDate(new Date());
     	pet.setOwner(owner);
     	pet.setType(petType);
-    	pets.add(pet);
-
-    	// create visits to test get pets with visits
-        Visit visit = new Visit();
-        visit.setId( 1 );
-        visits.add( visit );
 
 
+        pets.add(pet);
 
     	pet = new Pet();
     	pet.setId(4);
@@ -168,8 +163,17 @@ public class PetRestControllerTests {
 
 
     @Test
-    @Ignore // WORK_IN_PROGRESS
     public void testGetPetsWithVisitsSuccess() throws Exception {
+        // create visits to test get pets with visits
+        Pet pet = pets.get(0);
+        Visit visit = new Visit();
+        visit.setId( 1 );
+        visits.add( visit );
+        for( Visit _visit : visits ){
+            pet.addVisit( _visit );
+            _visit.setPet( pet );
+        }
+
         // we just need to verify the service and that it returns a set of pets
         given(this.clinicService.findAllPets()).willReturn(pets);
         this.mockMvc.perform(get("/api/pets/petswithvisits")
@@ -177,15 +181,14 @@ public class PetRestControllerTests {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.[0].id").value(3))
-            .andExpect(jsonPath("$.[0].name").value("Rosy"));
+            .andExpect(jsonPath("$.[0].name").value("Rosy"))
+            .andExpect(jsonPath("$.[0].visits").isNotEmpty());
     }
 
     @Test
-    @Ignore // WORK_IN_PROGRESS
     public void testGetPetsWithVisitsNotFound() throws Exception {
         // we just need to verify the service and that it returns a set of pets
-        given(this.clinicService.findAllPets()).willReturn(pets);
-        given( this.clinicService.findVisitsByPetId( 3 )).willReturn( new ArrayList<Visit>() );
+        given(this.clinicService.findAllPets()).willReturn( new ArrayList<>());
         this.mockMvc.perform(get("/api/pets/petswithvisits")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());

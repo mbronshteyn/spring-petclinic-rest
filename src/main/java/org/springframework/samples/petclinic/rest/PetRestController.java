@@ -78,7 +78,7 @@ public class PetRestController {
         Collection<Pet> pets = this.clinicService.findAllPets();
 
         Collection<Pet> responsePets =  pets.stream()
-            .filter( pet -> pet.getVisits().isEmpty() == false )
+            .filter( pet -> pet.getVisits() != null && ! pet.getVisits().isEmpty() )
             .collect( Collectors.toList());
 
         if(responsePets.isEmpty()){
