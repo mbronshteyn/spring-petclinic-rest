@@ -77,13 +77,13 @@ public class PetRestController {
         Collection<Pet> pets = this.clinicService.findAllPets();
         Collection<Pet> responsePets =  new ArrayList<>();
 
-        for( Pet pet : pets ){
+        pets.stream().forEach( pet -> {
             // TODO: use service call for now to filter out pets with visits
             if( clinicService.findVisitsByPetId(pet.getId()).isEmpty() ){
-                continue;
+                return;
             }
             responsePets.add( pet );
-        }
+        });
 
         if(responsePets.isEmpty()){
             return new ResponseEntity<Collection<Pet>>(HttpStatus.NOT_FOUND);
