@@ -75,11 +75,7 @@ public class PetRestController {
     @RequestMapping(value = "/petswithvisits", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Collection<Pet>> getPetsWithVisits(){
 
-        Collection<Pet> pets = this.clinicService.findAllPets();
-
-        Collection<Pet> responsePets =  pets.stream()
-            .filter( pet -> pet.getVisits() != null && ! pet.getVisits().isEmpty() )
-            .collect( Collectors.toList());
+        Collection<Pet> responsePets = this.clinicService.findPetsWithVisits();
 
         if(responsePets.isEmpty()){
             return new ResponseEntity<Collection<Pet>>(HttpStatus.NOT_FOUND);

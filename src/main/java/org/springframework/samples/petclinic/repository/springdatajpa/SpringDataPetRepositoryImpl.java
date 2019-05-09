@@ -20,7 +20,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
+
+import java.util.Collection;
 
 /**
  * @author Vitaliy Fedoriv
@@ -39,5 +42,10 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 		this.em.createQuery("DELETE FROM Visit visit WHERE pet_id=" + petId).executeUpdate();
 		this.em.createQuery("DELETE FROM Pet pet WHERE id=" + petId).executeUpdate();
 	}
+
+	@Override
+    public Collection<Pet> findWithVists(){
+	    return null;
+    }
 
 }

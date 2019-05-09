@@ -19,6 +19,8 @@ package org.springframework.samples.petclinic.repository.springdatajpa;
 import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.model.Pet;
 
+import java.util.Collection;
+
 /**
  * @author Vitaliy Fedoriv
  *
@@ -28,5 +30,7 @@ import org.springframework.samples.petclinic.model.Pet;
 public interface PetRepositoryOverride {
 	
 	public void delete(Pet pet);
+
+    Collection<Pet> findWithVists();
 
 }

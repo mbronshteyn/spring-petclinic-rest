@@ -175,7 +175,7 @@ public class PetRestControllerTests {
         }
 
         // we just need to verify the service and that it returns a set of pets
-        given(this.clinicService.findAllPets()).willReturn(pets);
+        given(this.clinicService.findPetsWithVisits()).willReturn(pets);
         this.mockMvc.perform(get("/api/pets/petswithvisits")
             .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())

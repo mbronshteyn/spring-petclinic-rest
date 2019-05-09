@@ -130,17 +130,18 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     @Override
     public Collection<Pet> findAll() throws DataAccessException {
         Map<String, Object> params = new HashMap<>();
-        Collection<Pet> pets = new ArrayList<Pet>();
         Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
         jdbcPets = this.namedParameterJdbcTemplate
             .query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets",
                 params,
                 new JdbcPetRowMapper());
-        populatePets(pets, jdbcPets);
-        return pets;
+        return populatePets( jdbcPets );
     }
 
-    private void populatePets(Collection<Pet> pets, Collection<JdbcPet> jdbcPets) {
+    private Collection<Pet> populatePets( Collection<JdbcPet> jdbcPets) {
+
+        Collection<Pet> pets = new ArrayList<>();
+
         Collection<PetType> petTypes = this.namedParameterJdbcTemplate.query("SELECT id, name FROM types ORDER BY name",
             new HashMap<String,
                 Object>(), BeanPropertyRowMapper.newInstance(PetType.class));
@@ -165,20 +166,29 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             });
             pets.add(jdbcPet);
         }
+
+        return pets;
+    }
+
+    @Override
+    public Collection<Pet> findWithVists() throws DataAccessException {
+        Collection<JdbcPet> jdbcPets = this.namedParameterJdbcTemplate
+            .query("SELECT DISTINCT pets.id as pets_id, pets.name, pets.birth_date, pets.type_id, pets.owner_id FROM pets INNER JOIN visits ON pets.id = visits.pet_id",
+                new HashMap<String, Object>(),
+                new JdbcPetRowMapper());
+        return populatePets( jdbcPets );
     }
 
     @Override
     public Collection<Pet> findByOwnerId(int ownerId) throws DataAccessException {
         Map<String, Object> params = new HashMap<>();
         params.put("owner_id", ownerId);
-        Collection<Pet> pets = new ArrayList<Pet>();
         Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
         jdbcPets = this.namedParameterJdbcTemplate
             .query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE owner_id=:owner_id",
                 params,
                 new JdbcPetRowMapper());
-        populatePets(pets, jdbcPets);
-        return pets;
+        return populatePets( jdbcPets );
     }
 
     @Override
