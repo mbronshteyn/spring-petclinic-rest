@@ -1,0 +1,106 @@
+{
+	"info": {
+		"_postman_id": "4a157d17-4148-46ac-b1fd-ea326499cf1a",
+		"name": "PetClinic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Pets with visits",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9966/petclinic/api/pets/petswithvisits",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9966",
+					"path": [
+						"petclinic",
+						"api",
+						"pets",
+						"petswithvisits"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pets by Owner ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0869cdca-1d06-4f9d-8945-591eb79fcc3f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check if owner id matches request\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.map( pet => {",
+							"         pm.expect( pet.owner.id ).to.eql( 3 );",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "b2d063c3-df2b-4843-be5f-a7fe555c0baa",
+						"exec": [
+							"pm.globals.set(\"owner_id\", 3  )"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9966/petclinic/api/pets/ownerid/{{owner_id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9966",
+					"path": [
+						"petclinic",
+						"api",
+						"pets",
+						"ownerid",
+						"{{owner_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
