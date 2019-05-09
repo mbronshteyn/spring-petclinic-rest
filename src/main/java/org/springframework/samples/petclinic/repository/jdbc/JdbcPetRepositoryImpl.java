@@ -148,10 +148,21 @@ public class JdbcPetRepositoryImpl implements PetRepository {
             "SELECT id, first_name, last_name, address, city, telephone FROM owners ORDER BY last_name",
             new HashMap<String, Object>(),
             BeanPropertyRowMapper.newInstance(Owner.class));
+
         for (JdbcPet jdbcPet : jdbcPets) {
             jdbcPet.setType(EntityUtils.getById(petTypes, PetType.class, jdbcPet.getTypeId()));
             jdbcPet.setOwner(EntityUtils.getById(owners, Owner.class, jdbcPet.getOwnerId()));
             // TODO add visits
+            Map<String, Object> params = new HashMap<>();
+            params.put("pet_id",  jdbcPet.getId() );
+            List<Visit> visits = this.namedParameterJdbcTemplate.query(
+                "SELECT id, pet_id, visit_date, description FROM visits WHERE pet_id=:pet_id",
+                params,
+                BeanPropertyRowMapper.newInstance(Visit.class)
+            );
+            visits.stream().forEach( visit -> {
+                jdbcPet.addVisit( visit );
+            });
             pets.add(jdbcPet);
         }
     }

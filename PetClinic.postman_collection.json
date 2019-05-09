@@ -7,6 +7,29 @@
 	"item": [
 		{
 			"name": "Pets with visits",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ea8ce2bb-0bd6-4102-933c-7fc884b24c5d",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check if reponse pets have visits\",  () => {",
+							"    var jsonData = pm.response.json();",
+							"    jsonData.forEach( pet => {",
+							"         pm.expect( pet.visits.length ).to.not.eql( 0 );",
+							"    });",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -49,9 +72,9 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Check if owner id matches request\", function () {",
+							"pm.test(\"Check if owner id matches request\",  () => {",
 							"    var jsonData = pm.response.json();",
-							"    jsonData.map( pet => {",
+							"    jsonData.forEach( pet => {",
 							"         pm.expect( pet.owner.id ).to.eql( 3 );",
 							"    });",
 							"});",
@@ -97,6 +120,51 @@
 						"pets",
 						"ownerid",
 						"{{owner_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pets Find All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85b2f3b9-dd6a-4357-829a-05fdb4c7ad44",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:9966/petclinic/api/pets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9966",
+					"path": [
+						"petclinic",
+						"api",
+						"pets"
 					]
 				}
 			},

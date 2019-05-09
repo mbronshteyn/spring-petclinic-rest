@@ -18,6 +18,7 @@ package org.springframework.samples.petclinic.rest;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -75,15 +76,10 @@ public class PetRestController {
     public ResponseEntity<Collection<Pet>> getPetsWithVisits(){
 
         Collection<Pet> pets = this.clinicService.findAllPets();
-        Collection<Pet> responsePets =  new ArrayList<>();
 
-        pets.stream().forEach( pet -> {
-            // TODO: use service call for now to filter out pets with visits
-            if( clinicService.findVisitsByPetId(pet.getId()).isEmpty() ){
-                return;
-            }
-            responsePets.add( pet );
-        });
+        Collection<Pet> responsePets =  pets.stream()
+            .filter( pet -> pet.getVisits().isEmpty() == false )
+            .collect( Collectors.toList());
 
         if(responsePets.isEmpty()){
             return new ResponseEntity<Collection<Pet>>(HttpStatus.NOT_FOUND);
