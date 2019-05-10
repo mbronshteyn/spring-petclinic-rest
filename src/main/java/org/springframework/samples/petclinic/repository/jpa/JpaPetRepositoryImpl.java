@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.model.Pet;
 import org.springframework.samples.petclinic.model.PetType;
+import org.springframework.samples.petclinic.model.Visit;
 import org.springframework.samples.petclinic.repository.PetRepository;
 import org.springframework.stereotype.Repository;
 
@@ -83,11 +84,13 @@ public class JpaPetRepositoryImpl implements PetRepository {
 
     @Override
     public Collection<Pet> findByOwnerId(int ownerId) throws DataAccessException {
-        return null;
+        String ownerIdString = String.valueOf( ownerId );
+        return this.em.createQuery("SELECT pet FROM Pet pet WHERE owner_id=" + ownerIdString).getResultList();
     }
 
     @Override
     public Collection<Pet> findWithVists() throws DataAccessException {
-        return null;
+        List resultList = em.createQuery("SELECT DISTINCT pet FROM Visit v JOIN v.pet pet").getResultList();
+        return resultList;
     }
 }
