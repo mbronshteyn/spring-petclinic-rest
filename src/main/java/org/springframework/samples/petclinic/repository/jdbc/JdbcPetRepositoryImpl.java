@@ -183,8 +183,7 @@ public class JdbcPetRepositoryImpl implements PetRepository {
     public Collection<Pet> findByOwnerId(int ownerId) throws DataAccessException {
         Map<String, Object> params = new HashMap<>();
         params.put("owner_id", ownerId);
-        Collection<JdbcPet> jdbcPets = new ArrayList<JdbcPet>();
-        jdbcPets = this.namedParameterJdbcTemplate
+        Collection<JdbcPet> jdbcPets = this.namedParameterJdbcTemplate
             .query("SELECT pets.id as pets_id, name, birth_date, type_id, owner_id FROM pets WHERE owner_id=:owner_id",
                 params,
                 new JdbcPetRowMapper());
