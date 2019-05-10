@@ -45,7 +45,6 @@ public class SpringDataPetRepositoryImpl implements PetRepositoryOverride {
 
 	@Override
     public Collection<Pet> findWithVists(){
-	    return null;
+        return em.createQuery("SELECT DISTINCT pet FROM Visit v JOIN v.pet pet").getResultList();
     }
-
 }

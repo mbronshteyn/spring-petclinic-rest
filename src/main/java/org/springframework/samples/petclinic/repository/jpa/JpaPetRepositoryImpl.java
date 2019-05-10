@@ -90,7 +90,6 @@ public class JpaPetRepositoryImpl implements PetRepository {
 
     @Override
     public Collection<Pet> findWithVists() throws DataAccessException {
-        List resultList = em.createQuery("SELECT DISTINCT pet FROM Visit v JOIN v.pet pet").getResultList();
-        return resultList;
+        return em.createQuery("SELECT DISTINCT pet FROM Visit v JOIN v.pet pet").getResultList();
     }
 }
