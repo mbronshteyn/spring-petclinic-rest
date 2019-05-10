@@ -135,6 +135,22 @@ public abstract class AbstractClinicServiceTests {
 //    }
 
     @Test
+    public void shouldFindPetsByOwnerId(){
+        Collection<Pet> petsByOwnerId = this.clinicService.findPetsByOwnerId(6);
+        petsByOwnerId.stream().forEach( pet -> {
+            assertThat( pet.getOwner().getId() ).isEqualTo( 6 );
+        });
+    }
+
+    @Test
+    public void shouldFindPetsWithVisits(){
+        Collection<Pet> petsByOwnerId = this.clinicService.findPetsWithVisits();
+        petsByOwnerId.stream().forEach( pet -> {
+            assertThat( pet.getVisits().isEmpty() ).isFalse();
+        });
+    }
+
+    @Test
     @Transactional
     public void shouldInsertPetIntoDatabaseAndGenerateId() {
         Owner owner6 = this.clinicService.findOwnerById(6);
