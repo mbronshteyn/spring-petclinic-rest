@@ -17,6 +17,8 @@
 package org.springframework.samples.petclinic.rest;
 
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -129,6 +131,7 @@ public class PetRestControllerTests {
             .andExpect(content().contentType("application/json;charset=UTF-8"))
             .andExpect(jsonPath("$.id").value(3))
             .andExpect(jsonPath("$.name").value("Rosy"));
+        verify( this.clinicService, times( 1 ) ).findPetById( 3);
     }
 
     @Test
